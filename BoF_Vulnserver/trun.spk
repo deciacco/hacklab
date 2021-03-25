@@ -1,3 +1,4 @@
+printf("TRUN trun.spk : ");
 s_readline();
 s_string("TRUN ");
-s_string_variable("0");
+s_string_variable("COMMAND");
