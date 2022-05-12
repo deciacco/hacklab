@@ -18,6 +18,8 @@ class Person:
     # if changed on the instance, only changed for that instance
     class_attr = True
 
+# examples
+# ****************************************************************
 print(Person.__dict__)
 print(Person.__doc__)
 print(Person.__name__)
