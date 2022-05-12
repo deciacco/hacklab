@@ -1,4 +1,5 @@
 import pickle
+from os.path import exists
 
 hackers = {"neug": 1, "geohot": 100, "neo": 1000}
 
@@ -18,11 +19,15 @@ for key, value in hackers_v2.items():
 
 print ("-"*50)
 
-# save serialized object to file
-#with open("hackers.pickle", "wb") as hndl:
-#	pickle.dump(hackers, hndl)
+if exists("hackers.pickle"):
+	# read serialized object from file
+	with open("hackers.pickle", "rb") as hndl:
+		hackers_v3 = pickle.load(hndl)
 
-# read serialized object from file
-with open("hackers.pickle", "rb") as hndl:
-	hackers_v3 = pickle.load(hndl)
-print(hackers_v3)
+	print(hackers_v3)
+else:
+	# save serialized object to file
+	with open("hackers.pickle", "wb") as hndl:
+		pickle.dump(hackers, hndl)
+
+	print("hakers_v3 created, run again to load and view.")
