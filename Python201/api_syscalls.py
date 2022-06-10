@@ -1,7 +1,7 @@
 from ctypes import *
 from ctypes import wintypes
 
-#syscalls allow call without using dlls.
+#syscalls allow api calls without using dlls.
 kernel32 = windll.kernel32
 nt = windll.ntdll
 
@@ -11,5 +11,10 @@ NTSTATUS = wintypes.DWORD
 MEM_COMMIT = 0x00001000
 MEM_RESERVE = 0x00002000
 PAGE_EXECUTE_READWRITE = 0x40
+
+
+def verify(X):
+    if not x:
+            raise WinError()
 
 
