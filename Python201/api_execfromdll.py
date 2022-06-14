@@ -15,5 +15,5 @@ windll.msvcrt.puts(mut_str)
 print(mut_str.raw)
 
 lib = WinDLL("c:\\Users\\eugenio.cilento\\Dev\\hacklab\\Python201\\CallFromPy.dll")
-
 lib.hello()
+
