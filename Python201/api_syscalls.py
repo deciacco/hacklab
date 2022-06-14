@@ -57,7 +57,7 @@ r = asm_function()
 print(hex(r))
 """
 #***************************************************************
-
+#----------------------------------------------￬￬￬ - NtAllocateVirtualMemory 
 buf2 = create_string_buffer(b"\x4c\x8b\xd1\xb8\x18\x00\x00\x00\x0f\x05\xc3")
 buf2_addr = addressof(buf2)
 print(hex(buf2_addr))
