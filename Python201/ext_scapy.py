@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
-
+import os
 from scapy.all import *
+
+curr_dir = os.path.dirname(os.path.realpath(__file__))
 
 """
 ip_layer = IP(dst="247ctf.com")
@@ -60,7 +62,7 @@ sniff(filter="port 80", prn=process, store=False, iface=IFACES.dev_from_index(11
 
 #Load pcap file and analyze it
 #****************************************************************
-scapy_cap = rdpcap("error_reporting.pcap")
+scapy_cap = rdpcap(os.path.join(curr_dir, "error_reporting.pcap"))
 for packet in scapy_cap:
     if packet.getlayer(ICMP):
         print(packet.load)
