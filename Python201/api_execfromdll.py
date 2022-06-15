@@ -1,4 +1,11 @@
 from ctypes import *
+from ctypes.wintypes import POINT
+import os
+from re import X
+from tkinter import Y
+from turtle import st
+
+curr_dir = os.path.dirname(os.path.realpath(__file__))
 
 print(windll.msvcrt.time(None))
 
@@ -14,6 +21,26 @@ windll.msvcrt.memset(mut_str, c_char(b"X"), 5)
 windll.msvcrt.puts(mut_str)
 print(mut_str.raw)
 
-lib = WinDLL("c:\\Users\\eugenio.cilento\\Dev\\hacklab\\Python201\\CallFromPy.dll")
+lib = WinDLL(os.path.join(curr_dir, "CallFromPy.dll"))
 lib.hello()
 
+lib.length.argtypes = (c_char_p,)
+lib.length.restype = c_int
+
+str1 = b"abc\x00123"
+print(len(str1))
+print(lib.length(c_char_p(str1)))
+
+lib.add.argtypes = (c_int, c_int)
+lib.add.restype = c_int
+print(lib.add(2, 2))
+
+lib.add_p.argtypes = (POINTER(c_int), POINTER(c_int), POINTER(c_int))
+
+x = c_int(2)
+y = c_int(4)
+result = c_int(0)
+
+lib.add_p(byref(x), byref(y), byref(result))
+
+print(result.value)
