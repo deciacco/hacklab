@@ -65,6 +65,7 @@ sniff(filter="port 80", prn=process, store=False, iface=IFACES.dev_from_index(11
 scapy_cap = rdpcap(os.path.join(curr_dir, "error_reporting.pcap"))
 for packet in scapy_cap:
     if packet.getlayer(ICMP):
-        print(packet.load)
+        bytesObj = packet.load
+        print(bytesObj.decode())
         
     
