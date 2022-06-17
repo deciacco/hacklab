@@ -6,15 +6,15 @@ import re
 
 CURR_DIR = os.path.dirname(__file__)
 
-dll = os.path.join(CURR_DIR, "Dll2.dll").encode()
+dll = os.path.join(CURR_DIR, "Dll1.dll").encode()
 
 kernel32 = windll.kernel32
 SIZE_T = c_size_t
 
-MEM_COMMIT = 0X00001000
-MEM_RESERVE = 0X00002000
-PAGE_READWRITE = 0X04
-EXECUTE_IMMEDIATELY = 0X0
+MEM_COMMIT = 0x00001000
+MEM_RESERVE = 0x00002000
+PAGE_READWRITE = 0x04
+EXECUTE_IMMEDIATELY = 0x0
 PROCESS_ALL_ACCESS = (0x000F0000 | 0x00100000 | 0x00000FFF)
 
 class _SECURITY_ATTRIBUTES(Structure):
@@ -71,7 +71,7 @@ GetProcAddress.argtypes     = [
 
 CreateRemoteThread          = kernel32.CreateRemoteThread
 CreateRemoteThread.restype  = wintypes.HANDLE
-CreateRemoteThread.restypes = [
+CreateRemoteThread.argtypes = [
         wintypes.HANDLE,
         LPSECURITY_ATTRIBUTES,
         SIZE_T,
@@ -83,8 +83,7 @@ CreateRemoteThread.restypes = [
 
 
 #-----------------------------------------------------------
-print(dll)
-pid = 7164
+pid = 16296
 
 handle = OpenProcess(PROCESS_ALL_ACCESS, False, pid)
 
@@ -98,5 +97,20 @@ remote_memory = VirtualAllocEx(handle, False, len(dll) + 1, MEM_COMMIT | MEM_RES
 if not remote_memory:
     raise WinError()
 
-print("Memory allocated => {0:X}".format(remote_memory))
+print("Memory allocated => ", hex(remote_memory))
 
+write = WriteProcessMemory(handle, remote_memory, dll, len(dll) + 1, None)
+
+if not write:
+    raise WinError()
+
+print("Bytes written => {}".format(dll))
+
+load_lib = GetProcAddress(GetModuleHandle(b"kernel32.dll"), b"LoadLibraryA")
+
+print("LoadLibrary address => ", hex(load_lib))
+
+if not load_lib:
+    raise WinError()
+
+rthread = CreateRemoteThread(handle, None, 0, load_lib, remote_memory, EXECUTE_IMMEDIATELY, None)
