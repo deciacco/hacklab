@@ -94,10 +94,55 @@ class BurpExtender(IBurpExtender, ITab):
         return self._tab
 
     def _send(self, event):
-        return
+        self._clicked = True
+        time.sleep(1)
+        self._output.text = self._response_data
+
+    def _send_thread(self):
+        while True:
+            if self._kill_threads:
+                sys.exit()
+
+            if self._clicked:
+                self._clicked = False
+                self._s.send(self._usercommand.text)
+
+    def _recv_thread(self):
+        while True:
+            if self._kill_threads:
+                sys.exit()
+
+            data = self._s.recv(4096).replace("Enter Command> ", "")
+
+            if data:
+                self._response_data = data
 
     def _connect(self, event):
-        return
+        try:
+            self._s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self._s.connect((self._ipaddress.text, 1234))
+            self._kill_threads = False
+
+            threading.Thread(target=self._send_thread).start()
+            threading.Thread(target=self._recv_thread).start()
+
+            self._connectbtn.enabled = False
+            self._disconnectbtn.enabled = True
+            self._sendbtn.enabled = True
+            self._ipaddress.enabled = False
+
+            self._output.text = "Connected to bind shell!"
+        except:
+            self._output.text = "Could not connect, try again!"
 
     def _disconnect(self, event):
-        return
+        self._s.send("exit")
+        self._s.close()
+        self._kill_threads = True
+
+        self._connectbtn.enabled = True
+        self._disconnectbtn.enabled = False
+        self._sendbtn.enabled = False
+        self._ipaddress.enabled = True
+
+        self._output.text = "Disconnected from bind shell!"

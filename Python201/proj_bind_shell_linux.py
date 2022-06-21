@@ -1,12 +1,12 @@
 import socket, subprocess, threading, argparse
 
 DEFAULT_PORT = 1234
-LISTEN_IP = "172.17.1.1"
+LISTEN_IP = "127.0.0.1"
 MAX_BUFFER = 4096
 
 def execute_cmd(cmd):
     try:
-        output = subprocess.check_output("cmd /c {}".format(cmd), stderr=subprocess.STDOUT)
+        output = subprocess.check_output(["bash", "-c", cmd], stderr=subprocess.STDOUT)
     except:
         output = b"Command failed!"
     return output
@@ -41,7 +41,7 @@ def send_thread(s):
     try:
         while True:
             data = input() + "\n"
-            s.send(data.encode("latin-1"))
+            s.send(data.encode("utf-8"))
     except:
         s.close()
         exit()
